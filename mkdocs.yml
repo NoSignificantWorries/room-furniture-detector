@@ -1,0 +1,16 @@
+site_name: RoomFurnitureDetector
+site_description: Automatic furniture detector for room photos
+repo_url: https://github.com/NoSignificantWorries/room-furniture-detector.git
+
+theme:
+  name: readthedocs
+  features:
+    - navigation.sections
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - API: api.md
+
+plugins:
+  - search

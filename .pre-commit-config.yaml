@@ -1,0 +1,29 @@
+repos:
+  # ---- Базовые проверки файлов ----
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+
+  # ---- Ruff: линт + формат ----
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.7.1
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+    # ---- Prettier: web/ (HTML, CSS, JS, JSON, Markdown) ----
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: npx prettier --write
+        language: system
+        types_or: [json, yaml, markdown, html, css, javascript]
+        files: ^web/
+        exclude: ^web/(node_modules|dist)/

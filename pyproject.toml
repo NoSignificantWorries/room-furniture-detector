@@ -1,0 +1,54 @@
+[project]
+name = "room-furniture-detector"
+version = "0.1.0"
+description = "Automatic furniture detector that extracts bounding boxes with class labels from room photos and outputs them as JSON. Built for real-estate systems to automate furniture description."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=2.5.4",
+]
+
+[project.optional-dependencies]
+serve = [
+    "fastapi>=0.143.0",
+    "onnxruntime>=1.31.0",
+    "uvicorn[standard]>=0.54.0",
+]
+train = [
+    "hydra-core>=1.3.7",
+    "torch>=2.14.1",
+]
+
+[dependency-groups]
+dev = [
+    "mkdocs>=1.6.1",
+    "mypy>=2.4.0",
+    "pre-commit>=4.6.2",
+    "pytest>=9.1.1",
+    "ruff>=0.17.0",
+]
+
+
+[tool.ruff]
+line-length = 80
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+]
+ignore = ["E501"]  # длину строки контролирует форматтер
+
+[tool.ruff.lint.isort]
+known-first-party = ["furniture_detector"]
+
+[tool.ruff.format]
+quote-style = "double"
