@@ -1,0 +1,19 @@
+root: data/homeobjects-3K
+
+train: images/train
+val: images/val
+
+num_classes: 12
+names:
+  - bed
+  - sofa
+  - chair
+  - table
+  - lamp
+  - tv
+  - laptop
+  - wardrobe
+  - window
+  - door
+  - potted plant
+  - photo frame

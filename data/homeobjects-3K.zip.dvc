@@ -1,0 +1,13 @@
+md5: a2a2f92421b5286080a4f14c87356cc3
+frozen: true
+deps:
+- checksum: '"0x8DDC07C0727FA5E"'
+  size: 409423784
+  hash: md5
+  path:
+    https://github.com/ultralytics/assets/releases/download/v0.0.0/homeobjects-3K.zip
+outs:
+- md5: 4d4774e96b8a980fe518600e528676fe
+  size: 409423784
+  hash: md5
+  path: homeobjects-3K.zip
