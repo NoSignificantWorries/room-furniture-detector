@@ -1,9 +1,77 @@
 <!doctype html>
-<html>
+<html lang="ru">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>RoomFurnitureDetector</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <header class="topbar">
+      <h1>Room Furniture Detector</h1>
+      <div class="status">
+        <span id="modeBadge" class="pill" hidden></span>
+        <span id="health" class="pill" data-state="disabled">
+          <span class="dot"></span><span id="healthText">Проверка отключена</span>
+        </span>
+      </div>
+    </header>
+
+    <main>
+      <label id="dropzone" class="dropzone" for="fileInput">
+        <input id="fileInput" type="file" accept=".jpg,.jpeg,.png,.webp" multiple hidden />
+        <strong>Перетащите изображения сюда или нажмите для выбора</strong>
+        <span>JPG, PNG, WEBP — можно выбрать сразу весь альбом</span>
+      </label>
+      <p id="notice" class="notice" hidden></p>
+
+      <section class="toolbar">
+        <span id="summary" class="summary">Нет изображений</span>
+        <div class="actions">
+          <button id="clearBtn" type="button" class="btn">Очистить</button>
+          <button id="exportBtn" type="button" class="btn">Скачать JSON</button>
+          <button id="retryBtn" type="button" class="btn">Повторить неудачные</button>
+          <button id="cancelBtn" type="button" class="btn danger">Остановить</button>
+          <button id="startBtn" type="button" class="btn primary">Начать обработку</button>
+        </div>
+      </section>
+
+      <section id="progress" class="progress" hidden>
+        <progress id="progressBar" value="0" max="1"></progress>
+        <span id="progressText"></span>
+      </section>
+
+      <section id="gallery" class="gallery"></section>
+    </main>
+
+    <dialog id="confirmDialog" class="dialog">
+      <form method="dialog">
+        <h2>Начать обработку?</h2>
+        <p id="confirmText"></p>
+        <div class="dialog-actions">
+          <button class="btn" value="cancel">Отмена</button>
+          <button class="btn primary" value="confirm">Отправить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="viewer" class="dialog viewer">
+      <header class="viewer-head">
+        <strong id="viewerTitle"></strong>
+        <span id="viewerCounter" class="muted"></span>
+        <label class="check">
+          <input id="showBoxes" type="checkbox" checked /> Показывать боксы
+        </label>
+        <button id="viewerClose" type="button" class="btn">Закрыть</button>
+      </header>
+      <div class="viewer-body">
+        <button id="prevBtn" type="button" class="nav" aria-label="Предыдущее">‹</button>
+        <div id="viewerStage" class="stage"></div>
+        <button id="nextBtn" type="button" class="nav" aria-label="Следующее">›</button>
+        <aside id="viewerInfo" class="info"></aside>
+      </div>
+    </dialog>
+
     <script type="text/javascript" src="app.js"></script>
   </body>
 </html>
