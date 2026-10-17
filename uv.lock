@@ -3962,6 +3962,15 @@ wheels = [
 ]
 
 [[package]]
+name = "python-multipart"
+version = "0.0.32"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5b/42/55c32bb9b12693c092ad250a0e82edb5b31ddeda6eb772de5f308b3804ad/python_multipart-0.0.32.tar.gz", hash = "sha256:be54b7f3fa167bb83e4fcd936b887b708f4e57fe75911c02aebf53efaf8d938e", size = 46881, upload-time = "2026-06-04T16:18:58.647Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/04/e8135ebd1ad02c56ec633277529b2602ff99ff634be76cdba5744cf554fd/python_multipart-0.0.32-py3-none-any.whl", hash = "sha256:ff6d3f776f16878c894e52e107296ffc890e913c611b1a4ec6c44e2821fe2e23", size = 30042, upload-time = "2026-06-04T16:18:57.319Z" },
+]
+
+[[package]]
 name = "python-rapidjson"
 version = "1.25"
 source = { registry = "https://pypi.org/simple" }
@@ -4152,6 +4161,8 @@ export = [
 serve = [
     { name = "fastapi" },
     { name = "onnxruntime" },
+    { name = "pillow" },
+    { name = "python-multipart" },
     { name = "tensorrt-lean" },
     { name = "tritonclient", extra = ["http"] },
     { name = "uvicorn", extra = ["standard"] },
@@ -4160,10 +4171,13 @@ train = [
     { name = "fire" },
     { name = "hydra-core" },
     { name = "mlflow" },
+    { name = "pillow" },
     { name = "torch" },
 ]
 web = [
     { name = "fastapi" },
+    { name = "pillow" },
+    { name = "python-multipart" },
     { name = "uvicorn" },
 ]
 
@@ -4188,6 +4202,11 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.5.4" },
     { name = "onnx", marker = "extra == 'export'", specifier = ">=1.23.2" },
     { name = "onnxruntime", marker = "extra == 'serve'", specifier = ">=1.31.0" },
+    { name = "pillow", marker = "extra == 'serve'", specifier = ">=13.0.0" },
+    { name = "pillow", marker = "extra == 'train'", specifier = ">=13.0.0" },
+    { name = "pillow", marker = "extra == 'web'", specifier = ">=13.0.0" },
+    { name = "python-multipart", marker = "extra == 'serve'", specifier = ">=0.0.32" },
+    { name = "python-multipart", marker = "extra == 'web'", specifier = ">=0.0.32" },
     { name = "tensorrt", marker = "extra == 'export'", specifier = ">=11.4.0.106" },
     { name = "tensorrt-lean", marker = "extra == 'serve'", specifier = ">=11.4.0.106" },
     { name = "torch", marker = "extra == 'train'", specifier = ">=2.14.1" },
