@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync  --extra serve --frozen --no-dev
+RUN uv sync --extra serve --frozen --no-dev
 
 COPY src/ /app/src/
 
