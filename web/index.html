@@ -1,9 +1,58 @@
 <!doctype html>
-<html>
+<html lang="ru">
   <head>
-    <title>RoomFurnitureDetector</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>room-furniture-detector</title>
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <script type="text/javascript" src="app.js"></script>
+    <header>
+      <div>
+        <h1>room-furniture-detector</h1>
+      </div>
+      <div id="health" class="health muted">Проверка...</div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <h2>1. Альбом</h2>
+        <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" multiple />
+
+        <div class="actions">
+          <button id="confirmBtn" disabled>Подтвердить и отправить</button>
+          <button id="clearBtn" class="secondary" disabled>Очистить</button>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="showLabels" checked />
+            Показывать подписи классов
+          </label>
+        </div>
+
+        <div id="overall" class="overall"></div>
+        <div class="progress overall-progress">
+          <div id="overallBar"></div>
+        </div>
+
+        <p id="configInfo" class="muted"></p>
+      </section>
+
+      <section class="panel">
+        <h2>2. Батчи</h2>
+        <div id="batches" class="batches"></div>
+      </section>
+
+      <section class="panel">
+        <h2>3. Альбом с боксами</h2>
+        <div id="gallery" class="gallery"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Журнал событий</h2>
+        <pre id="log" class="log"></pre>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
   </body>
 </html>
