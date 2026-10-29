@@ -225,3 +225,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# DVC dataset artifacts
+data/*
+!data/*.dvc
