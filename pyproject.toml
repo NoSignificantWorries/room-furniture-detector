@@ -27,6 +27,7 @@ train = [
     "mlflow>=3.17.1",
     "pillow>=13.0.0",
     "torch>=2.14.1",
+    "ultralytics>=8.4.192",
 ]
 web = [
     "fastapi>=0.143.0",
@@ -55,6 +56,14 @@ export-tensorrt = "furniture_detector.export.to_tensorrt:main"
 
 [tool.uv]
 extra-index-url = ["https://pypi.nvidia.com/"]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
 
 [tool.ruff]
 line-length = 80
