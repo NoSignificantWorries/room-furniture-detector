@@ -118,6 +118,13 @@ def test_model(
             )
 
         model = YOLO(str(weights))
+        validation_output: dict[str, Path] = {}
+
+        def capture_save_dir(validator) -> None:
+            validation_output["save_dir"] = Path(validator.save_dir)
+
+        model.add_callback("on_val_end", capture_save_dir)
+
         results = model.val(
             data=str(dataset_yaml),
             split="test",
@@ -142,7 +149,7 @@ def test_model(
             "test/mAP50-95": float(metrics["metrics/mAP50-95(B)"]),
         }
 
-        save_dir = Path(model.validator.save_dir)
+        save_dir = validation_output["save_dir"]
         print(f"Test metrics: {test_metrics}")
         print(f"Results directory: {save_dir}")
 
