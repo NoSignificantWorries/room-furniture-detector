@@ -4267,6 +4267,7 @@ train = [
     { name = "mlflow" },
     { name = "pillow" },
     { name = "torch" },
+    { name = "torchvision" },
     { name = "ultralytics" },
 ]
 web = [
@@ -4305,6 +4306,7 @@ requires-dist = [
     { name = "tensorrt", marker = "extra == 'export'", specifier = ">=11.4.0.106" },
     { name = "tensorrt-lean", marker = "extra == 'serve'", specifier = ">=11.4.0.106" },
     { name = "torch", marker = "extra == 'train'", specifier = ">=2.14.1", index = "https://download.pytorch.org/whl/cu126" },
+    { name = "torchvision", marker = "extra == 'train'", specifier = ">=0.29.1", index = "https://download.pytorch.org/whl/cu126" },
     { name = "tritonclient", extras = ["http"], marker = "extra == 'serve'", specifier = ">=2.40.0" },
     { name = "ultralytics", marker = "extra == 'train'", specifier = ">=8.4.192" },
     { name = "uvicorn", marker = "extra == 'web'", specifier = ">=0.54.0" },
@@ -4865,18 +4867,32 @@ wheels = [
 
 [[package]]
 name = "torchvision"
-version = "0.29.2"
-source = { registry = "https://pypi.org/simple" }
+version = "0.29.1+cu126"
+source = { registry = "https://download.pytorch.org/whl/cu126" }
 dependencies = [
     { name = "numpy" },
     { name = "pillow" },
     { name = "torch" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/60/ec/ce97c46e5322b588b95be388f2c21878d014ca20838478e7aab59edd128a/torchvision-0.29.2-py3-none-macosx_14_0_arm64.whl", hash = "sha256:d412494ff011f24c884a3cffd33eba1cb45a0299d4e26c1e175113f9d3b3ebc7", size = 1823414, upload-time = "2026-10-28T15:21:31.892Z" },
-    { url = "https://files.pythonhosted.org/packages/30/7a/414f8188d01925491f74d8d125fe00e9c2354b6f0ede21c07737c2619ea4/torchvision-0.29.2-py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:a47f8f586df22d9e8e436854f9f613448e36788af8fb2e0eba91516034df2189", size = 7739265, upload-time = "2026-10-28T15:21:33.018Z" },
-    { url = "https://files.pythonhosted.org/packages/92/74/699d28bed7453dbe40b09d37aab8f6cd75f19a77a77d5ab4588a4f3239e7/torchvision-0.29.2-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:0875f7a23bd298813240f716c56df44ce72ddb45146589442a38edd0e1f59637", size = 7585493, upload-time = "2026-10-28T15:21:34.372Z" },
-    { url = "https://files.pythonhosted.org/packages/cf/9a/a728c3af061bff5e0c8a8389b6dfe99646f8290a2f6a5f8fb624a0c15b92/torchvision-0.29.2-py3-none-win_amd64.whl", hash = "sha256:5812c312d4401c3587a045fa4c6228d982ebc4faa9b472275d11afe5852e24f9", size = 1379121, upload-time = "2026-10-28T15:21:30.558Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:00ec6517420091214edd608e40d82ff6c0357d1a24399dde27ed64ca3a66e022", upload-time = "2026-09-30T15:46:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:f846900988cbd64b055886c9ad7e7a44606c5710e8272921062c647f237eae34", upload-time = "2026-09-30T15:46:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp312-cp312-win_amd64.whl", hash = "sha256:ab045bfb0ac014b80afb478190d14c6f7d3b57ade0d1fcd6ffc07414a0266b96", upload-time = "2026-09-30T15:46:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:22ee849cc8558d167409ab886c56ee7d730a423debdd20a9679e14e1e2f43845", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:7c4b8fac65ba8b7be1388330cdab2ab04c792e1482f287991a95a14d0ac76fdb", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp313-cp313-win_amd64.whl", hash = "sha256:62ac510088a541bfe1a4abefe0c963c973199aa93b900ba165798887e4485b70", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:9841983d0f4c8ec7227f64357cfd6549fee083656badfe3e85ecc8202927acf6", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:d1b1e196a514c0ec73a35699aebabc4afdbc333092569b4d0c26bed9bb4ed568", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp314-cp314-win_amd64.whl", hash = "sha256:f84aa3864cc5a4da6de460275a07a3e20deb982d715bf1c4eae1c624311c3c58", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:b4914b7ac763e68a2dc369a251de201c0d682bf46d7c46d50e161ae62a1da322", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:78115e244f2d76270b45462f0bae007af8d1ec51d12ae10cfc40e2e5a1112d4f", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp314-cp314t-win_amd64.whl", hash = "sha256:e6e5a4edd2c34ea69eda59060a18e360d485220a5e544da12f198f109440ace9", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315-manylinux_2_28_aarch64.whl", hash = "sha256:3b63f88832665a6b03dd65696243d9a274699c84fbe35200d1388f52ece0076c", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315-manylinux_2_28_x86_64.whl", hash = "sha256:c7c485a49482071741aca33dbc594d5213b3e88c57178791b3dae0dfd0a736c4", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315-win_amd64.whl", hash = "sha256:bf405f8717c6bf8a255cd7b603b5f17d6b35c750718837e73acae5e194bb7179", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315t-manylinux_2_28_aarch64.whl", hash = "sha256:59a00d3d69baa43bd01f547bd559b2cfbea53b387f07c45cd79fde4164326046", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315t-manylinux_2_28_x86_64.whl", hash = "sha256:8c278a7545d631ad71013edff80543989978c952c1470609793ea384bea91533", upload-time = "2026-09-30T15:46:22Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315t-win_amd64.whl", hash = "sha256:3a827403f7fe07d9eeaeb9fbe5df744fe0ef88e0cd62704868188ad4c35c1eed", upload-time = "2026-09-30T15:46:22Z" },
 ]
 
 [[package]]

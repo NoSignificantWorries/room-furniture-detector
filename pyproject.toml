@@ -27,6 +27,7 @@ train = [
     "mlflow>=3.17.1",
     "pillow>=13.0.0",
     "torch>=2.14.1",
+    "torchvision>=0.29.1",
     "ultralytics>=8.4.192",
 ]
 web = [
@@ -64,6 +65,7 @@ explicit = true
 
 [tool.uv.sources]
 torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
 
 [tool.ruff]
 line-length = 80

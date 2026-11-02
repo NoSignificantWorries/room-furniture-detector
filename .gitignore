@@ -229,3 +229,16 @@ __marimo__/
 # DVC dataset artifacts
 data/*
 !data/*.dvc
+
+# Local training artifacts
+/outputs/
+/runs/
+/mlruns/
+/mlartifacts/
+*.pt
+*.cache
+
+# Local MLflow storage
+/mlflow.db
+/mlflow.db-shm
+/mlflow.db-wal

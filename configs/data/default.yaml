@@ -1,4 +1,4 @@
-root: data/homeobjects-3K
+root: data
 
 train: images/train
 val: images/val
