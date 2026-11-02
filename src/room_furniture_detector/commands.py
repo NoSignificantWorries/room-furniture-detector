@@ -48,6 +48,28 @@ def prepare_data(overrides: str = "") -> None:
     prepare_splits(config, project_root)
 
 
+def predict(
+    image: str,
+    weights: str = "outputs/yolo11n_baseline/weights/best.pt",
+    output: str = "outputs/predictions/room.json",
+    conf: float = 0.25,
+    imgsz: int = 640,
+    device: str = "cpu",
+    save_image: bool = False,
+) -> None:
+    from room_furniture_detector.prediction import predict_image
+
+    predict_image(
+        image=image,
+        weights=weights,
+        output=output,
+        conf=conf,
+        imgsz=imgsz,
+        device=device,
+        save_image=save_image,
+    )
+
+
 def main() -> None:
     fire.Fire(
         {
@@ -55,6 +77,7 @@ def main() -> None:
             "prepare_data": prepare_data,
             "train": train,
             "test": test,
+            "predict": predict,
         }
     )
 
