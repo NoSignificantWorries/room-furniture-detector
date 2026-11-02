@@ -5,6 +5,8 @@ from pathlib import Path
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig, OmegaConf
 
+from room_furniture_detector.data_split import prepare_splits
+
 
 def load_config(overrides: str = "") -> DictConfig:
     project_root = Path(__file__).resolve().parents[2]
@@ -68,11 +70,14 @@ def prepare_dataset_yaml(
     if len(config.data.names) != config.data.num_classes:
         raise ValueError("num_classes does not match the number of names.")
 
+    manifests = prepare_splits(config, project_root)
+
     dataset_config = OmegaConf.create(
         {
             "path": data_root.as_posix(),
-            "train": config.data.train,
-            "val": config.data.val,
+            "train": manifests["train"].as_posix(),
+            "val": manifests["val"].as_posix(),
+            "test": manifests["test"].as_posix(),
             "names": OmegaConf.to_container(config.data.names),
         }
     )
@@ -132,6 +137,19 @@ def train_model(overrides: str = "", dry_run: bool = False) -> None:
         mlflow.set_tags(metadata)
         mlflow.log_artifact(str(config_path), artifact_path="configuration")
         mlflow.log_artifact(str(dataset_yaml), artifact_path="configuration")
+
+        split_dir = (project_root / config.data.split.output_dir).resolve()
+
+        for split_file in (
+            "train.txt",
+            "val.txt",
+            "test.txt",
+            "class_counts.csv",
+        ):
+            mlflow.log_artifact(
+                str(split_dir / split_file),
+                artifact_path="data_split",
+            )
 
     model.add_callback("on_train_start", log_project_metadata)
 

@@ -22,10 +22,23 @@ def train(
     )
 
 
+def prepare_data(overrides: str = "") -> None:
+    from pathlib import Path
+
+    from room_furniture_detector.data_split import prepare_splits
+    from room_furniture_detector.training import load_config
+
+    project_root = Path(__file__).resolve().parents[2]
+    config = load_config(overrides)
+
+    prepare_splits(config, project_root)
+
+
 def main() -> None:
     fire.Fire(
         {
             "analyze": analyze,
+            "prepare_data": prepare_data,
             "train": train,
         }
     )
