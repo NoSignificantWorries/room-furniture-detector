@@ -1,0 +1,12 @@
+# @package _global_
+
+model:
+  weights: outputs/yolo11n_baseline/weights/best.pt
+
+evaluation:
+  conf: 0.001
+  iou: 0.7
+  save_json: false
+  plots: true
+
+run_name: yolo11n_baseline_test

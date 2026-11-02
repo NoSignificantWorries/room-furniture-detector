@@ -22,6 +22,20 @@ def train(
     )
 
 
+def test(
+    overrides: str = "",
+    dry_run: bool = False,
+    source_run_id: str = "",
+) -> None:
+    from room_furniture_detector.evaluation import test_model
+
+    test_model(
+        overrides=overrides,
+        dry_run=dry_run,
+        source_run_id=source_run_id,
+    )
+
+
 def prepare_data(overrides: str = "") -> None:
     from pathlib import Path
 
@@ -40,6 +54,7 @@ def main() -> None:
             "analyze": analyze,
             "prepare_data": prepare_data,
             "train": train,
+            "test": test,
         }
     )
 
