@@ -30,6 +30,7 @@ train = [
 ]
 web = [
     "fastapi>=0.143.0",
+    "httpx>=0.28.1",
     "pillow>=13.0.0",
     "python-multipart>=0.0.32",
     "uvicorn>=0.54.0",
