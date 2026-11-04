@@ -4,12 +4,18 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 ENV UV_PROJECT_ENVIRONMENT=/usr/local
 
+ENV USE_MOCK=true
+ENV CHECK_HEALTH=false
+ENV MODEL_SERVICE_URL=http://127.0.0.1:8001
+
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
 
 RUN uv sync --extra web --frozen --no-dev
 
-COPY src/ /app/src/
+COPY web/ /app/web/
 
-# CMD ["python", "main.py"]
+EXPOSE 8000
+
+CMD ["python", "web/app.py"]

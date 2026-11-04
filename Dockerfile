@@ -12,4 +12,4 @@ RUN uv sync --extra serve --frozen --no-dev
 
 COPY src/ /app/src/
 
-# CMD ["python", "main.py"]
+# CMD ["python", "src/app.py"]
