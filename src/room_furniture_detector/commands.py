@@ -26,6 +26,7 @@ def test(
     overrides: str = "",
     dry_run: bool = False,
     source_run_id: str = "",
+    split: str = "test",
 ) -> None:
     from room_furniture_detector.evaluation import test_model
 
@@ -33,6 +34,7 @@ def test(
         overrides=overrides,
         dry_run=dry_run,
         source_run_id=source_run_id,
+        split=split,
     )
 
 

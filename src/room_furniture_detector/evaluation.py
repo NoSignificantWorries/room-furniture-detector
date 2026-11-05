@@ -41,7 +41,11 @@ def test_model(
     overrides: str = "",
     dry_run: bool = False,
     source_run_id: str = "",
+    split: str = "test",
 ) -> None:
+    if split not in {"val", "test"}:
+        raise ValueError("split must be either 'val' or 'test'.")
+
     cfg = load_config(overrides)
     project_root = Path(__file__).resolve().parents[2]
 
@@ -54,6 +58,7 @@ def test_model(
         print(f"Weights: {weights}")
         print(f"Dataset: {dataset_yaml}")
         print(f"Output directory: {output_dir}")
+        print(f"Evaluation split: {split}")
         print(f"Source training run: {source_run_id or 'not specified'}")
         return
 
@@ -64,8 +69,8 @@ def test_model(
         raise FileNotFoundError(f"Dataset YAML not found: {dataset_yaml}")
 
     dataset_cfg = OmegaConf.load(dataset_yaml)
-    if not dataset_cfg.get("test"):
-        raise ValueError(f"Test split is missing in {dataset_yaml}")
+    if not dataset_cfg.get(split):
+        raise ValueError(f"Split '{split}' is missing in {dataset_yaml}")
 
     checkpoint_sha256 = hashlib.sha256(weights.read_bytes()).hexdigest()
     tracking_enabled = bool(cfg.logging.tracking_uri)
@@ -84,7 +89,8 @@ def test_model(
         if tracking_enabled:
             tags = {
                 **_git_tags(project_root),
-                "job_type": "test",
+                "job_type": "evaluation",
+                "evaluation_split": split,
                 "checkpoint_sha256": checkpoint_sha256,
             }
             if source_run_id:
@@ -95,7 +101,7 @@ def test_model(
                 {
                     "model.weights": str(weights),
                     "data.yaml": str(dataset_yaml),
-                    "data.split": "test",
+                    "data.split": split,
                     "evaluation.imgsz": cfg.training.imgsz,
                     "evaluation.batch": cfg.training.batch,
                     "evaluation.device": str(cfg.training.device),
@@ -127,7 +133,7 @@ def test_model(
 
         results = model.val(
             data=str(dataset_yaml),
-            split="test",
+            split=split,
             imgsz=cfg.training.imgsz,
             batch=cfg.training.batch,
             device=cfg.training.device,
@@ -142,19 +148,20 @@ def test_model(
         )
 
         metrics = results.results_dict
-        test_metrics = {
-            "test/precision": float(metrics["metrics/precision(B)"]),
-            "test/recall": float(metrics["metrics/recall(B)"]),
-            "test/mAP50": float(metrics["metrics/mAP50(B)"]),
-            "test/mAP50-95": float(metrics["metrics/mAP50-95(B)"]),
+        evaluation_metrics = {
+            f"{split}/precision": float(metrics["metrics/precision(B)"]),
+            f"{split}/recall": float(metrics["metrics/recall(B)"]),
+            f"{split}/mAP50": float(metrics["metrics/mAP50(B)"]),
+            f"{split}/mAP50-95": float(metrics["metrics/mAP50-95(B)"]),
         }
 
         save_dir = validation_output["save_dir"]
-        print(f"Test metrics: {test_metrics}")
+        print(f"Evaluation split: {split}")
+        print(f"Evaluation metrics: {evaluation_metrics}")
         print(f"Results directory: {save_dir}")
 
         if tracking_enabled:
-            mlflow.log_metrics(test_metrics)
+            mlflow.log_metrics(evaluation_metrics)
             mlflow.log_artifacts(
                 str(save_dir),
                 artifact_path="evaluation",
