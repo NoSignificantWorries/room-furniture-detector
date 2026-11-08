@@ -4,6 +4,8 @@ from pathlib import Path
 from PIL import Image, UnidentifiedImageError
 from ultralytics import YOLO
 
+from room_furniture_detector import config
+
 
 def _resolve_path(value: str, project_root: Path) -> Path:
     path = Path(value)
@@ -27,7 +29,7 @@ def predict_image(
     if imgsz <= 0:
         raise ValueError("imgsz must be positive.")
 
-    project_root = Path(__file__).resolve().parents[2]
+    project_root = config.PROJECT_ROOT
     image_path = _resolve_path(image, project_root)
     weights_path = _resolve_path(weights, project_root)
     output_path = _resolve_path(output, project_root)

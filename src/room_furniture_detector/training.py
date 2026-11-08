@@ -5,23 +5,35 @@ from pathlib import Path
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig, OmegaConf
 
+from room_furniture_detector import config as app_config
 from room_furniture_detector.data_split import prepare_splits
 
 
+def _app_config_value(name: str):
+    if not name.isupper() or not hasattr(app_config, name):
+        raise ValueError(f"Unknown application setting: {name}")
+
+    value = getattr(app_config, name)
+    return str(value) if isinstance(value, Path) else value
+
+
 def load_config(overrides: str = "") -> DictConfig:
-    project_root = Path(__file__).resolve().parents[2]
-    config_dir = project_root / "configs"
+    OmegaConf.register_new_resolver(
+        "app",
+        _app_config_value,
+        replace=True,
+    )
 
     with initialize_config_dir(
         version_base=None,
-        config_dir=str(config_dir),
+        config_dir=str(app_config.HYDRA_CONFIG_DIR),
     ):
-        config = compose(
-            config_name="config",
+        cfg = compose(
+            config_name=app_config.HYDRA_CONFIG_NAME,
             overrides=overrides.split(),
         )
 
-    return config
+    return cfg
 
 
 def get_git_metadata(project_root: Path) -> dict[str, str]:
@@ -98,7 +110,11 @@ def train_model(overrides: str = "", dry_run: bool = False) -> None:
     import mlflow
     from ultralytics import YOLO, settings
 
-    project_root = Path(__file__).resolve().parents[2]
+    from room_furniture_detector.download import download_data
+
+    download_data()
+
+    project_root = app_config.PROJECT_ROOT
     output_dir = (project_root / config.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 

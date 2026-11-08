@@ -6,5 +6,5 @@ defaults:
   - logging: default
   - _self_
 
-output_dir: outputs
-run_name: yolo11n_hydra_smoke
+output_dir: ${app:TRAIN_OUTPUT_DIR}
+run_name: ${app:TRAIN_RUN_NAME}

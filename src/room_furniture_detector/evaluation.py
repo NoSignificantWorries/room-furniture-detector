@@ -7,6 +7,7 @@ import mlflow
 from omegaconf import OmegaConf
 from ultralytics import YOLO
 
+from room_furniture_detector import config
 from room_furniture_detector.training import load_config
 
 
@@ -47,7 +48,23 @@ def test_model(
         raise ValueError("split must be either 'val' or 'test'.")
 
     cfg = load_config(overrides)
-    project_root = Path(__file__).resolve().parents[2]
+
+    evaluation = cfg.get("evaluation", {})
+
+    evaluation_conf = float(evaluation.get("conf", config.EVALUATION_CONF))
+    evaluation_iou = float(evaluation.get("iou", config.EVALUATION_IOU))
+    evaluation_save_json = bool(
+        evaluation.get("save_json", config.EVALUATION_SAVE_JSON)
+    )
+    evaluation_plots = bool(evaluation.get("plots", config.EVALUATION_PLOTS))
+
+    if not 0.0 <= evaluation_conf <= 1.0:
+        raise ValueError("Evaluation confidence must be between 0 and 1.")
+
+    if not 0.0 <= evaluation_iou <= 1.0:
+        raise ValueError("Evaluation IoU must be between 0 and 1.")
+
+    project_root = config.PROJECT_ROOT
 
     weights = _resolve_path(str(cfg.model.weights), project_root)
     output_dir = _resolve_path(str(cfg.output_dir), project_root)
@@ -106,8 +123,10 @@ def test_model(
                     "evaluation.batch": cfg.training.batch,
                     "evaluation.device": str(cfg.training.device),
                     "evaluation.workers": cfg.training.workers,
-                    "evaluation.conf": 0.001,
-                    "evaluation.nms_iou": 0.7,
+                    "evaluation.conf": evaluation_conf,
+                    "evaluation.nms_iou": evaluation_iou,
+                    "evaluation.save_json": evaluation_save_json,
+                    "evaluation.plots": evaluation_plots,
                 }
             )
             mlflow.log_text(
@@ -138,10 +157,10 @@ def test_model(
             batch=cfg.training.batch,
             device=cfg.training.device,
             workers=cfg.training.workers,
-            conf=0.001,
-            iou=0.7,
-            plots=True,
-            save_json=False,
+            conf=evaluation_conf,
+            iou=evaluation_iou,
+            plots=evaluation_plots,
+            save_json=evaluation_save_json,
             project=str(output_dir),
             name=str(cfg.run_name),
             exist_ok=False,

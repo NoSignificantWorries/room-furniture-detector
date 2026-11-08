@@ -4,9 +4,9 @@ model:
   weights: outputs/yolo11n_baseline/weights/best.pt
 
 evaluation:
-  conf: 0.001
-  iou: 0.7
-  save_json: false
-  plots: true
+  conf: ${app:EVALUATION_CONF}
+  iou: ${app:EVALUATION_IOU}
+  save_json: ${app:EVALUATION_SAVE_JSON}
+  plots: ${app:EVALUATION_PLOTS}
 
 run_name: yolo11n_baseline_test

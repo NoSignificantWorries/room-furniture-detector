@@ -7,7 +7,7 @@ requires-python = ">=3.12"
 license = { text = "MIT" }
 
 dependencies = [
-    "dvc>=3.67.1",
+    "dvc[gdrive]>=3.67.1",
     "numpy>=2.5.4",
 ]
 
@@ -15,11 +15,10 @@ dependencies = [
 serve = [
     "fastapi>=0.143.0",
     "onnxruntime>=1.31.0",
-    "tensorrt-lean>=11.4.0.106",
     "uvicorn[standard]>=0.54.0",
-    "tritonclient[http]>=2.40.0",
     "python-multipart>=0.0.32",
     "pillow>=13.0.0",
+    "opencv-python-headless>=5.0.0.93",
 ]
 train = [
     "fire>=0.7.1",
@@ -41,19 +40,33 @@ export = [
     "onnx>=1.23.2",
     "tensorrt>=11.4.0.106",
 ]
+export-onnx = [
+    "onnx>=1.23.2",
+    "onnxruntime>=1.31.0",
+]
+export-tensorrt = [
+    "tensorrt-cu12>=11.4,<12",
+]
+artifacts = [
+    "gdown>=6.5.1",
+]
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
     "mkdocs>=1.6.1",
     "mypy>=2.4.0",
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",
     "ruff>=0.17.0",
+    "torchmetrics[detection]>=1.9.0",
 ]
 
 [project.scripts]
-export-onnx = "furniture_detector.export.to_onnx:main"
-export-tensorrt = "furniture_detector.export.to_tensorrt:main"
+room-detector = "room_furniture_detector.commands:main"
+export-onnx = "room_furniture_detector.export.to_onnx:main"
+export-tensorrt = "room_furniture_detector.export.to_tensorrt:main"
+download-models = "room_furniture_detector.model_download:main"
 
 [tool.uv]
 extra-index-url = ["https://pypi.nvidia.com/"]
@@ -85,7 +98,7 @@ select = [
 ignore = ["E501"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["furniture_detector"]
+known-first-party = ["room_furniture_detector"]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -100,3 +113,11 @@ quote-style = "double"
 # [tool.flake8]
 # max-line-length = 80
 # extend-ignore = ["E203", "W503"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["room_furniture_detector*"]

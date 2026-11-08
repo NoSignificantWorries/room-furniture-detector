@@ -1,13 +1,30 @@
 import fire
 
-from room_furniture_detector.analysis import analyze_dataset
+from room_furniture_detector import config
+
+
+def download_data() -> None:
+    from room_furniture_detector.download import (
+        download_data as download_dataset,
+    )
+
+    download_dataset()
 
 
 def analyze(
-    data_dir: str = "data",
-    output_dir: str = "reports/dataset",
+    data_dir: str | None = None,
+    output_dir: str | None = None,
 ) -> None:
-    analyze_dataset(data_dir=data_dir, output_dir=output_dir)
+    from room_furniture_detector.analysis import analyze_dataset
+
+    analyze_dataset(
+        data_dir=(
+            str(config.ANALYZE_DATA_DIR) if data_dir is None else data_dir
+        ),
+        output_dir=(
+            str(config.ANALYZE_OUTPUT_DIR) if output_dir is None else output_dir
+        ),
+    )
 
 
 def train(
@@ -39,42 +56,42 @@ def test(
 
 
 def prepare_data(overrides: str = "") -> None:
-    from pathlib import Path
-
     from room_furniture_detector.data_split import prepare_splits
     from room_furniture_detector.training import load_config
 
-    project_root = Path(__file__).resolve().parents[2]
-    config = load_config(overrides)
+    cfg = load_config(overrides)
 
-    prepare_splits(config, project_root)
+    prepare_splits(cfg, config.PROJECT_ROOT)
 
 
 def predict(
     image: str,
-    weights: str = "outputs/yolo11n_baseline/weights/best.pt",
-    output: str = "outputs/predictions/room.json",
-    conf: float = 0.25,
-    imgsz: int = 640,
-    device: str = "cpu",
-    save_image: bool = False,
+    weights: str | None = None,
+    output: str | None = None,
+    conf: float | None = None,
+    imgsz: int | None = None,
+    device: str | None = None,
+    save_image: bool | None = None,
 ) -> None:
     from room_furniture_detector.prediction import predict_image
 
     predict_image(
         image=image,
-        weights=weights,
-        output=output,
-        conf=conf,
-        imgsz=imgsz,
-        device=device,
-        save_image=save_image,
+        weights=(str(config.MODEL_PT_PATH) if weights is None else weights),
+        output=(str(config.PREDICT_OUTPUT_PATH) if output is None else output),
+        conf=(config.PREDICT_CONF if conf is None else conf),
+        imgsz=(config.PREDICT_IMGSZ if imgsz is None else imgsz),
+        device=(config.PREDICT_DEVICE if device is None else str(device)),
+        save_image=(
+            config.PREDICT_SAVE_IMAGE if save_image is None else save_image
+        ),
     )
 
 
 def main() -> None:
     fire.Fire(
         {
+            "download_data": download_data,
             "analyze": analyze,
             "prepare_data": prepare_data,
             "train": train,

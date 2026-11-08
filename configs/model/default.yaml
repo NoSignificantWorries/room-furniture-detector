@@ -1,1 +1,1 @@
-weights: yolo11n.pt
+weights: ${app:TRAIN_INITIAL_WEIGHTS}
