@@ -1,4 +1,4 @@
-root: data/homeobjects-3K
+root: ${app:DATA_ROOT}
 
 train: images/train
 val: images/val
@@ -17,3 +17,8 @@ names:
   - door
   - potted plant
   - photo frame
+
+split:
+  val_fraction: 0.15
+  seed: 42
+  output_dir: ${app:DATA_SPLIT_OUTPUT_DIR}

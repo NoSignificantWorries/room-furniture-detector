@@ -1,0 +1,5 @@
+defaults:
+  - baseline
+  - _self_
+
+cls_pw: 0.5
