@@ -6,13 +6,13 @@ ENV UV_PROJECT_ENVIRONMENT=/usr/local
 
 ENV USE_MOCK=true
 ENV CHECK_HEALTH=false
+ENV WEB_PORT=8000
 ENV MODEL_SERVICE_URL=http://127.0.0.1:8001
 
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
-
-RUN uv sync --extra web --frozen --no-dev
+RUN uv sync --extra web --frozen --no-dev --no-install-project
 
 COPY web/ /app/web/
 

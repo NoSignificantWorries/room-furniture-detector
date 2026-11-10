@@ -1,18 +1,23 @@
 services:
   web:
     build:
-        context: .
-        dockerfile: Dockerfile.web
+      context: .
+      dockerfile: Dockerfile.web
+    environment:
+        USE_MOCK: $USE_MOCK
+        CHECK_HEALTH: $CHECK_HEALTH
+        MODEL_SERVICE_URL: "http://model-service:8001"
     ports:
       - "8000:8000"
-    environment:
-      USE_MOCK: "false"
-      CHECK_HEALTH: "true"
-      MODEL_SERVICE_URL: "http://model-service:8001"
-    # depends_on:
-    #   - model-service
+    depends_on:
+      - model-service
 
-  # model-service:
-  #   image: your-model-image:latest
-  #   ports:
-  #     - "8001:8001"
+  model-service:
+    build: .
+    environment:
+        MODEL_WORKERS_COUNT: $MODEL_WORKERS_COUNT
+        MODEL_ONNX_PATH: $MODEL_ONNX_PATH
+        MODEL_TENSORRT_PATH: $MODEL_TENSORRT_PATH
+        MODEL_BACKEND: $MODEL_BACKEND
+    ports:
+      - "8001:8001"

@@ -11,6 +11,8 @@ def _env_bool(name: str, default: bool) -> bool:
 USE_MOCK = _env_bool("USE_MOCK", True)
 CHECK_HEALTH = _env_bool("CHECK_HEALTH", False)
 
+WEB_PORT = int(os.getenv("WEB_PORT", "8000"))
+
 MODEL_SERVICE_URL = os.getenv("MODEL_SERVICE_URL", "http://127.0.0.1:8001")
 
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "4"))
