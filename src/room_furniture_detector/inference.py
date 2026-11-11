@@ -54,7 +54,7 @@ class OnnxBackend:
 
 class TensorRTBackend:
     def __init__(self) -> None:
-        import tensorrt as trt
+        import tensorrt_lean as trt
         import torch
 
         self.trt = trt
@@ -75,6 +75,7 @@ class TensorRTBackend:
 
         self.logger = trt.Logger(trt.Logger.WARNING)
         self.runtime = trt.Runtime(self.logger)
+        self.runtime.engine_host_code_allowed = True
         self.engine = self.runtime.deserialize_cuda_engine(path.read_bytes())
 
         if self.engine is None:
@@ -334,9 +335,11 @@ class Detector:
             if box[2] <= box[0] or box[3] <= box[1]:
                 continue
 
+            class_id = int(classes[index])
+
             detections.append(
                 {
-                    "cls": int(classes[index]),
+                    "class_name": config.MODEL_CLASS_NAMES[class_id],
                     "conf": float(np.clip(scores[index], 0, 1)),
                     "xyxy_norm": box.tolist(),
                 }

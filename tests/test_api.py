@@ -40,7 +40,7 @@ class FakeDetector:
                 if self.empty
                 else [
                     {
-                        "cls": 1,
+                        "class_name": "sofa",
                         "conf": 0.9,
                         "xyxy_norm": [0.1, 0.2, 0.8, 0.9],
                     }
@@ -142,7 +142,7 @@ def test_batch_generated_id_and_results(client, detector):
         assert item["height"] == 60
         assert item["boxes"] == [
             {
-                "cls": 1,
+                "class_name": "sofa",
                 "conf": 0.9,
                 "xyxy_norm": [0.1, 0.2, 0.8, 0.9],
             }

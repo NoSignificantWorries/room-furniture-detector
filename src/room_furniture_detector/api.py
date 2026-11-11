@@ -25,7 +25,7 @@ Coordinate = Annotated[
 
 
 class Box(BaseModel):
-    cls: int = Field(ge=0)
+    class_name: str
     conf: float = Field(ge=0, le=1, allow_inf_nan=False)
     xyxy_norm: tuple[Coordinate, Coordinate, Coordinate, Coordinate]
 

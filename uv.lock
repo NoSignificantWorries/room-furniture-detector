@@ -4237,6 +4237,7 @@ serve = [
     { name = "opencv-python-headless" },
     { name = "pillow" },
     { name = "python-multipart" },
+    { name = "tensorrt-lean-cu12" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 train = [
@@ -4274,8 +4275,8 @@ requires-dist = [
     { name = "fastapi", marker = "extra == 'web'", specifier = ">=0.143.0" },
     { name = "fire", marker = "extra == 'export'", specifier = ">=0.7.1" },
     { name = "fire", marker = "extra == 'train'", specifier = ">=0.7.1" },
-    { name = "httpx", marker = "extra == 'web'", specifier = ">=0.28.1" },
     { name = "gdown", marker = "extra == 'artifacts'", specifier = ">=6.5.1" },
+    { name = "httpx", marker = "extra == 'web'", specifier = ">=0.28.1" },
     { name = "hydra-core", marker = "extra == 'train'", specifier = ">=1.3.7" },
     { name = "mlflow", marker = "extra == 'train'", specifier = ">=3.17.1" },
     { name = "numpy", specifier = ">=2.5.4" },
@@ -4291,6 +4292,7 @@ requires-dist = [
     { name = "python-multipart", marker = "extra == 'web'", specifier = ">=0.0.32" },
     { name = "tensorrt", marker = "extra == 'export'", specifier = ">=11.4.0.106" },
     { name = "tensorrt-cu12", marker = "extra == 'export-tensorrt'", specifier = ">=11.4,<12" },
+    { name = "tensorrt-lean-cu12", marker = "extra == 'serve'", specifier = ">=11.4,<12" },
     { name = "torch", marker = "extra == 'train'", specifier = ">=2.14.1", index = "https://download.pytorch.org/whl/cu126" },
     { name = "torchvision", marker = "extra == 'train'", specifier = ">=0.29.1", index = "https://download.pytorch.org/whl/cu126" },
     { name = "ultralytics", marker = "extra == 'train'", specifier = ">=8.4.192" },
@@ -4785,6 +4787,38 @@ wheels = [
     { url = "https://pypi.nvidia.com/tensorrt-cu13-libs/tensorrt_cu13_libs-11.4.0.106-py3-none-manylinux_2_35_aarch64.whl", hash = "sha256:1d521cda14e86b8785ccd85de9ce47de61db04837f802a677d497d95d4d2343c" },
     { url = "https://pypi.nvidia.com/tensorrt-cu13-libs/tensorrt_cu13_libs-11.4.0.106-py3-none-win_amd64.whl", hash = "sha256:4d6a6e8b644f7f24df686c13809de7935eb3878d2a48cda1c7342c31143d4c16" },
     { url = "https://pypi.nvidia.com/tensorrt-cu13-libs/tensorrt_cu13_libs-11.4.0.106-py3-none-win_arm64.whl", hash = "sha256:a3231fed4887bed48c1da0c2f7a1b88ca39a5021e80870ab8b86ab99ce9b7391" },
+]
+
+[[package]]
+name = "tensorrt-lean-cu12"
+version = "11.4.0.106"
+source = { registry = "https://pypi.nvidia.com/" }
+dependencies = [
+    { name = "tensorrt-lean-cu12-bindings" },
+    { name = "tensorrt-lean-cu12-libs" },
+]
+sdist = { url = "https://pypi.nvidia.com/tensorrt-lean-cu12/tensorrt_lean_cu12-11.4.0.106.tar.gz", hash = "sha256:425b07240d950ef7a6d77c16b673337a2e087dfebe69e450c337b0134dbe06de" }
+
+[[package]]
+name = "tensorrt-lean-cu12-bindings"
+version = "11.4.0.106"
+source = { registry = "https://pypi.nvidia.com/" }
+wheels = [
+    { url = "https://pypi.nvidia.com/tensorrt-lean-cu12-bindings/tensorrt_lean_cu12_bindings-11.4.0.106-cp312-none-manylinux_2_28_x86_64.whl", hash = "sha256:9b253e3c1a4f35daa9e417d961558df7baca199e58af3b804da7ec4e78379058" },
+    { url = "https://pypi.nvidia.com/tensorrt-lean-cu12-bindings/tensorrt_lean_cu12_bindings-11.4.0.106-cp312-none-win_amd64.whl", hash = "sha256:a87671c457da835d3f15b72a65494018e94253f1bb9dfe35a6e9ae85e19769a3" },
+    { url = "https://pypi.nvidia.com/tensorrt-lean-cu12-bindings/tensorrt_lean_cu12_bindings-11.4.0.106-cp313-none-manylinux_2_28_x86_64.whl", hash = "sha256:e1ce6e2b4b3b9cfbaf09fb35be0c407c19d829a9c604761ace4c58297d186b67" },
+    { url = "https://pypi.nvidia.com/tensorrt-lean-cu12-bindings/tensorrt_lean_cu12_bindings-11.4.0.106-cp313-none-win_amd64.whl", hash = "sha256:d168ad06fcb5c7a6fe0c0a39f47760e784a3a63b57c234b05e39c8817b06cb4c" },
+    { url = "https://pypi.nvidia.com/tensorrt-lean-cu12-bindings/tensorrt_lean_cu12_bindings-11.4.0.106-cp314-none-manylinux_2_28_x86_64.whl", hash = "sha256:dfd61d22f45ba3f1e6ce92223104ec4284412d07ed822eb19a909c75a2be13d0" },
+    { url = "https://pypi.nvidia.com/tensorrt-lean-cu12-bindings/tensorrt_lean_cu12_bindings-11.4.0.106-cp314-none-win_amd64.whl", hash = "sha256:707b73ce63cc4211c111f92e33b74b9a9e1209aaf482b001635529c247020a33" },
+]
+
+[[package]]
+name = "tensorrt-lean-cu12-libs"
+version = "11.4.0.106"
+source = { registry = "https://pypi.nvidia.com/" }
+wheels = [
+    { url = "https://pypi.nvidia.com/tensorrt-lean-cu12-libs/tensorrt_lean_cu12_libs-11.4.0.106-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:091458056315f2ff7d8aa1b324ce8f9a0b227016fe223dfb60fc783eb8659478" },
+    { url = "https://pypi.nvidia.com/tensorrt-lean-cu12-libs/tensorrt_lean_cu12_libs-11.4.0.106-py3-none-win_amd64.whl", hash = "sha256:2eb8bfe061b71082955a4cf25dfa873f271509ea57c3e648276176e41afe25b9" },
 ]
 
 [[package]]

@@ -45,6 +45,7 @@ def export_tensorrt() -> Path:
 
     network = builder.create_network(0)
     parser = trt.OnnxParser(network, logger)
+    parser.set_flag(trt.OnnxParserFlag.NATIVE_INSTANCENORM)
 
     if not parser.parse_from_file(str(source)):
         errors = "\n".join(
@@ -62,6 +63,7 @@ def export_tensorrt() -> Path:
             )
 
     builder_config = builder.create_builder_config()
+    builder_config.set_flag(trt.BuilderFlag.VERSION_COMPATIBLE)
     builder_config.set_memory_pool_limit(
         trt.MemoryPoolType.WORKSPACE,
         int(workspace_gb * (1 << 30)),
@@ -81,6 +83,7 @@ def export_tensorrt() -> Path:
     engine_bytes = bytes(serialized)
 
     runtime = trt.Runtime(logger)
+    runtime.engine_host_code_allowed = True
     engine = runtime.deserialize_cuda_engine(engine_bytes)
 
     if engine is None:
