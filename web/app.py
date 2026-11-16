@@ -19,6 +19,9 @@ app = FastAPI(title="Boxes Web Demo")
 
 BATCHES: dict[str, dict[str, Any]] = {}
 
+# Список классов для Mock-режима (согласно новой api.yaml)
+MOCK_CLASSES = ["chair", "table", "sofa", "bed", "lamp", "wardrobe"]
+
 
 def _model_url(path: str) -> str:
     return f"{config.MODEL_SERVICE_URL.rstrip('/')}{path}"
@@ -39,7 +42,9 @@ def _mock_boxes() -> list[dict[str, Any]]:
 
         boxes.append(
             {
-                "cls": random.randint(0, 5),
+                "class_name": random.choice(
+                    MOCK_CLASSES
+                ),  # <--- ИЗМЕНЕНО ЗДЕСЬ
                 "conf": round(random.uniform(0.30, 0.99), 3),
                 "xyxy_norm": [
                     round(x1, 4),
@@ -263,5 +268,4 @@ async def style_css():
 if __name__ == "__main__":
     import uvicorn
 
-    # uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
     uvicorn.run(app, host="0.0.0.0", port=config.WEB_PORT)
