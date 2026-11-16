@@ -1,0 +1,12 @@
+# @package _global_
+
+model:
+  weights: outputs/yolo11n_baseline/weights/best.pt
+
+evaluation:
+  conf: ${app:EVALUATION_CONF}
+  iou: ${app:EVALUATION_IOU}
+  save_json: ${app:EVALUATION_SAVE_JSON}
+  plots: ${app:EVALUATION_PLOTS}
+
+run_name: yolo11n_baseline_test

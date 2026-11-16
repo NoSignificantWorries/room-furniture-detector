@@ -225,3 +225,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# DVC dataset artifacts
+data/?*
+!data/*.dvc
+
+# Local training artifacts
+/outputs/
+/runs/
+/mlruns/
+/mlartifacts/
+/models/furniture_detector.engine.json
+*.pt
+*.cache
+*.onnx
+*.engine
+*.plan
+
+# Local MLflow storage
+/mlflow.db
+/mlflow.db-shm
+/mlflow.db-wal

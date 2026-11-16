@@ -1,0 +1,6 @@
+defaults:
+  - default
+  - _self_
+
+epochs: 100
+patience: 20

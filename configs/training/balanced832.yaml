@@ -1,0 +1,5 @@
+defaults:
+  - balanced
+  - _self_
+
+imgsz: 832

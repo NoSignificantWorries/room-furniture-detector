@@ -1,0 +1,2 @@
+tracking_uri: ${app:MLFLOW_TRACKING_URI}
+experiment_name: ${app:MLFLOW_EXPERIMENT_NAME}
