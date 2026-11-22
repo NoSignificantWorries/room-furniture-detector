@@ -20,6 +20,7 @@ serve = [
     "python-multipart>=0.0.32",
     "pillow>=13.0.0",
     "opencv-python-headless>=5.0.0.93",
+    "cuda-bindings>=12.0,<13",
 ]
 train = [
     "fire>=0.7.1",

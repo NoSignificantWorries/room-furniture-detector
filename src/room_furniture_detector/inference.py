@@ -55,23 +55,31 @@ class OnnxBackend:
 class TensorRTBackend:
     def __init__(self) -> None:
         import tensorrt_lean as trt
-        import torch
+        from cuda.bindings import runtime as cudart
 
         self.trt = trt
-        self.torch = torch
+        self.cudart = cudart
         self.device_id = config.TENSORRT_DEVICE
 
-        if not torch.cuda.is_available():
+        (device_count,) = self._cuda_check(
+            cudart.cudaGetDeviceCount(),
+            "cudaGetDeviceCount",
+        )
+
+        if device_count == 0:
             raise RuntimeError("TensorRT requires an available CUDA GPU.")
 
-        if not 0 <= self.device_id < torch.cuda.device_count():
+        if not 0 <= self.device_id < device_count:
             raise ValueError("Invalid TENSORRT_DEVICE.")
 
         path = config.MODEL_TENSORRT_PATH
         if not path.is_file():
             raise FileNotFoundError(f"TensorRT engine not found: {path}")
 
-        torch.cuda.set_device(self.device_id)
+        self._cuda_check(
+            cudart.cudaSetDevice(self.device_id),
+            "cudaSetDevice",
+        )
 
         self.logger = trt.Logger(trt.Logger.WARNING)
         self.runtime = trt.Runtime(self.logger)
@@ -124,39 +132,116 @@ class TensorRTBackend:
         if any(dimension <= 0 for dimension in self.output_shape):
             raise ValueError("Only static TensorRT outputs are supported.")
 
-        self.device = torch.device("cuda", self.device_id)
-        self.stream = torch.cuda.Stream(device=self.device)
+        self.input_shape = expected
+
+    def _cuda_check(self, result: tuple, operation: str) -> tuple:
+        error, *values = result
+
+        if error != self.cudart.cudaError_t.cudaSuccess:
+            raise RuntimeError(f"{operation} failed: {error}")
+
+        return tuple(values)
 
     def run(self, tensor: np.ndarray) -> np.ndarray:
-        torch = self.torch
-        torch.cuda.set_device(self.device_id)
+        from contextlib import ExitStack
 
-        with torch.cuda.stream(self.stream):
-            device_input = torch.from_numpy(tensor).to(self.device).contiguous()
+        cudart = self.cudart
 
-            device_output = torch.empty(
-                self.output_shape,
-                dtype=torch.float32,
-                device=self.device,
+        if tensor.shape != self.input_shape:
+            raise ValueError(
+                f"Unexpected TensorRT input shape: {tensor.shape}; "
+                f"expected {self.input_shape}"
             )
 
-            if not self.context.set_tensor_address(
-                self.input_name, device_input.data_ptr()
-            ):
-                raise RuntimeError("Cannot bind TensorRT input.")
+        if tensor.dtype != np.float32:
+            raise TypeError("Expected float32 TensorRT input.")
 
-            if not self.context.set_tensor_address(
-                self.output_name, device_output.data_ptr()
-            ):
-                raise RuntimeError("Cannot bind TensorRT output.")
+        host_input = np.ascontiguousarray(tensor)
+        host_output = np.empty(self.output_shape, dtype=np.float32)
 
-            if not self.context.execute_async_v3(
-                stream_handle=self.stream.cuda_stream
-            ):
-                raise RuntimeError("TensorRT inference failed.")
+        self._cuda_check(
+            cudart.cudaSetDevice(self.device_id),
+            "cudaSetDevice",
+        )
 
-        self.stream.synchronize()
-        return device_output.cpu().numpy()
+        with ExitStack() as resources:
+            (stream,) = self._cuda_check(
+                cudart.cudaStreamCreate(),
+                "cudaStreamCreate",
+            )
+            resources.callback(
+                lambda: self._cuda_check(
+                    cudart.cudaStreamDestroy(stream),
+                    "cudaStreamDestroy",
+                )
+            )
+
+            (device_input,) = self._cuda_check(
+                cudart.cudaMalloc(host_input.nbytes),
+                "cudaMalloc(input)",
+            )
+            resources.callback(
+                lambda: self._cuda_check(
+                    cudart.cudaFree(device_input),
+                    "cudaFree(input)",
+                )
+            )
+
+            (device_output,) = self._cuda_check(
+                cudart.cudaMalloc(host_output.nbytes),
+                "cudaMalloc(output)",
+            )
+            resources.callback(
+                lambda: self._cuda_check(
+                    cudart.cudaFree(device_output),
+                    "cudaFree(output)",
+                )
+            )
+
+            try:
+                if not self.context.set_tensor_address(
+                    self.input_name,
+                    int(device_input),
+                ):
+                    raise RuntimeError("Cannot bind TensorRT input.")
+
+                if not self.context.set_tensor_address(
+                    self.output_name,
+                    int(device_output),
+                ):
+                    raise RuntimeError("Cannot bind TensorRT output.")
+
+                self._cuda_check(
+                    cudart.cudaMemcpyAsync(
+                        device_input,
+                        host_input.ctypes.data,
+                        host_input.nbytes,
+                        cudart.cudaMemcpyKind.cudaMemcpyHostToDevice,
+                        stream,
+                    ),
+                    "cudaMemcpyAsync(input)",
+                )
+
+                if not self.context.execute_async_v3(stream_handle=int(stream)):
+                    raise RuntimeError("TensorRT inference failed.")
+
+                self._cuda_check(
+                    cudart.cudaMemcpyAsync(
+                        host_output.ctypes.data,
+                        device_output,
+                        host_output.nbytes,
+                        cudart.cudaMemcpyKind.cudaMemcpyDeviceToHost,
+                        stream,
+                    ),
+                    "cudaMemcpyAsync(output)",
+                )
+            finally:
+                self._cuda_check(
+                    cudart.cudaStreamSynchronize(stream),
+                    "cudaStreamSynchronize",
+                )
+
+        return host_output
 
 
 class TritonBackend:
